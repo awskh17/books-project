@@ -15,4 +15,5 @@ BookDto getBookByTitle(String title);
 List<BookDto> getBookByPublisher(Publisher publisher);
 List<BookDto> getBookByAuthors(List<Author> authors);
 List<BookDto> getBookBySummary(String summary);
+BookDto getBookById(long id);
 }

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.Set;
@@ -22,7 +23,8 @@ public class Book {
     private String title;
     private String type;
     private String summary;
-    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd-mm-yyyy")
+    //@JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd-mm-yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateOfPublish;
     private int numOfPublish;
     @ManyToMany(cascade = CascadeType.ALL)

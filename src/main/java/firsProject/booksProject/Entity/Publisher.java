@@ -1,10 +1,13 @@
 package firsProject.booksProject.Entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@AllArgsConstructor
 public class Publisher {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)

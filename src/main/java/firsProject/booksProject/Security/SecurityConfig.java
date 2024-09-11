@@ -29,7 +29,9 @@ public class SecurityConfig {
                 .authorizeRequests(
                         req -> req
                                 .requestMatchers("/api/books/get/**").permitAll()
-                                .requestMatchers("/api/books/**").hasRole("ADMIN")
+                                .requestMatchers("front/api/books/get/**").permitAll()
+                                .requestMatchers("**").hasRole("ADMIN")
+
                 )
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())

@@ -55,7 +55,6 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto updateBookById(BookDto bookDto,long id) {
        Book book= bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException("The Book With Id : "+id+" Is Not Found"));
-
         Publisher publisher=book.getPublisher();
         if(publisher.getBooks().size()==1) publisherRepo.delete(publisher);
         else publisher.getBooks().remove(book);
@@ -80,8 +79,6 @@ public class BookServiceImpl implements BookService {
             author.getBooks().remove(book);
             if(author.getBooks().size()==0) {authorRepo.delete(author);}
         }
-        publisherRepo.save(publisher);
-        authorRepo.saveAll(authors);
         bookRepo.delete(book);
     }
 
@@ -125,6 +122,13 @@ public class BookServiceImpl implements BookService {
         List<Book> books =bookRepo.findBySummary(summary);
         if(books==null) {throw new BookNotFoundException("Book not found");}
         return books.stream().map(b -> BookMapper.mapToBookDTO(b)).toList();
+    }
+
+    @Override
+    public BookDto getBookById(long id) {
+        Book book=bookRepo.findBookById(id);
+        if(book==null) throw new BookNotFoundException("the book with id "+id+" is not found");
+        return BookMapper.mapToBookDTO(book);
     }
 
 }
