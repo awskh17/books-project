@@ -1,17 +1,14 @@
 package firsProject.booksProject.Dtos;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import firsProject.booksProject.Entity.Author;
-import firsProject.booksProject.Entity.Publisher;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Getter
 @Setter
@@ -20,12 +17,22 @@ public class BookDto {
     private String title;
     private String type;
     private String summary;
-    //@JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd-mm-yyyy")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateOfPublish;
     private int numOfPublish;
-    private Set<Author> authors;
-    private Publisher publisher;
+    private Set<String> authors=new HashSet<>();
+    private String publisher;
+
+    public BookDto(long id, String title, String type, String summary, Date dateOfPublish, int numOfPublish, Set<String> authors, String publisher) {
+        this.id = id;
+        this.title = title;
+        this.type = type;
+        this.summary = summary;
+        this.dateOfPublish = dateOfPublish;
+        this.numOfPublish = numOfPublish;
+        this.authors = authors;
+        this.publisher = publisher;
+    }
 
     @Override
     public String toString() {

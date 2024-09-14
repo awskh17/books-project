@@ -10,21 +10,23 @@
 </head>
 <body>
 <div class="container">
-  <h1>Book Management System</h1>
+  <h1>Modify Book</h1>
   <hr>
-  <h2>Save Book</h2>
-
+  <h2>Modify Book</h2>
+  <form action="#" th:action="@{/front/api/books/addAuthor}"  method="post" >
+    <p>if you have more than one author please add them by here don't worry I can handle it</p>
+    <input type="text"  th:value="${author}" name="author"  placeholder="Book authorName" class="form-control mb-4 col-4">
+    <button type="submit"  class="btn btn-info col-2"  >add Author</button>
+  </form>
+  <br>
   <form action="#" th:action="@{/front/api/books/save}" th:object="${book}" method="POST">
-    <input type="text" th:field="*{id}" placeholder="Book id" class="form-control mb-4 col-4">
-    <input type="text" th:field="*{title}" placeholder="Book title" class="form-control mb-4 col-4">
-    <input type="text" th:field="*{type}" placeholder="Book type" class="form-control mb-4 col-4">
-    <input type="text" th:field="*{summary}" placeholder="Book summary" class="form-control mb-4 col-4">
-    <input type="text" th:field="*{dateOfPublish}" placeholder="Book dateOfPublish" class="form-control mb-4 col-4">
-    <input type="text" th:field="*{numOfPublish}" placeholder="Book numOfPublish" class="form-control mb-4 col-4">
-    <input type="text" th:field="*{authors}" placeholder="Book Authors" class="form-control mb-4 col-4">
-    <input type="text" th:field="*{publisher}" placeholder="Book Publisher" class="form-control mb-4 col-4">
-
-    <button type="submit" class="btn btn-info col-2">Save Book</button>
+    <input type="text" required th:field="*{title}" placeholder="Book title" class="form-control mb-4 col-4">
+    <input type="text" required th:field="*{type}" placeholder="Book type" class="form-control mb-4 col-4">
+    <input type="text" required th:field="*{summary}" placeholder="Book summary" class="form-control mb-4 col-4">
+    <input type="date" required th:field="*{dateOfPublish}" placeholder="Book dateOfPublish" class="form-control mb-4 col-4">
+    <input type="number" required th:field="*{numOfPublish}" placeholder="Book numOfPublish" class="form-control mb-4 col-4">
+    <input type="text" required th:field="*{publisher}" placeholder="Book Publisher" class="form-control mb-4 col-4">
+    <button type="submit" class="btn btn-info col-2" th:href="@{/front/api/books/save}">Save Book</button>
   </form>
 
   <hr>

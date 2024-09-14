@@ -29,8 +29,13 @@ public class SecurityConfig {
                 .authorizeRequests(
                         req -> req
                                 .requestMatchers("/api/books/get/**").permitAll()
-                                .requestMatchers("front/api/books/get/**").permitAll()
-                                .requestMatchers("**").hasRole("ADMIN")
+                                .requestMatchers("/api/books/**").hasRole("ADMIN")
+                                .requestMatchers("front/api/books/add").hasRole("ADMIN")
+                                .requestMatchers("front/api/books/addAuthor").hasRole("ADMIN")
+                                .requestMatchers("front/api/books/update/**").hasRole("ADMIN")
+                                .requestMatchers("front/api/books/save").hasRole("ADMIN")
+                                .requestMatchers("front/api/books/deleteBook/**").hasRole("ADMIN")
+                                .requestMatchers("front/api/books/**").permitAll()
 
                 )
                 .httpBasic(Customizer.withDefaults())

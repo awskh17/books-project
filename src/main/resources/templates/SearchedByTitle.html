@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Books</title>
+    <title>Book Searched By Title</title>
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
@@ -47,6 +47,11 @@
         </tr>
         </tbody>
     </table>
+    <a th:href="@{/front/api/books/searchId}" class="btn btn-primary btn-sm mb-3" >Get Book By Id</a>
+    <a th:href="@{/front/api/books/searchPublisher}" class="btn btn-primary btn-sm mb-3" >Get Book By Publisher</a>
+    <a th:href="@{/front/api/books/searchAuthor}" class="btn btn-primary btn-sm mb-3" >Get Book By Authors</a>
+    <a th:href="@{/front/api/books/searchTitle}" class="btn btn-primary btn-sm mb-3" >Get Book By Title</a>
+    <a th:href="@{/front/api/books/searchSummary}" class="btn btn-primary btn-sm mb-3" >Get Book By Summary</a>
 </div>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="ISO-8859-1">
-  <title>Book Management System</title>
+  <title>Search By Title</title>
   <link rel="stylesheet"
         href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
         integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
@@ -10,17 +10,14 @@
 </head>
 <body>
 <div class="container">
-  <h1>Publisher Management System</h1>
+  <h1>Book Management System</h1>
   <hr>
-  <h2>Save Publisher</h2>
-
-  <form action="#" th:action="@{/front/api/publishers/save}" th:object="${publisher}" method="POST">
-    <input type="text" th:field="*{name}" placeholder="Publisher name" class="form-control mb-4 col-4">
-    <button type="submit" class="btn btn-info col-2" th:href="@{/front/api/publishers/save}">Save Publisher</button>
+  <h2>Search Book</h2>
+  <form action="#" method="post" th:action="@{/front/api/books/findByTitle}">
+    <input type="text" required th:value="*{title}" name="title" placeholder="title" class="form-control mb-4 col-4">
+    <button class="btn btn-primary" type="submit">Search</button>
   </form>
-
   <hr>
-
   <a th:href="@{/front/api/books/get}"> Back to Book List</a>
 </div>
 </body>

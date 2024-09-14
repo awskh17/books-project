@@ -1,8 +1,6 @@
 package firsProject.booksProject.Controllers;
 
 import firsProject.booksProject.Dtos.BookDto;
-import firsProject.booksProject.Entity.Author;
-import firsProject.booksProject.Entity.Publisher;
 import firsProject.booksProject.Exceptions.BookNotFoundException;
 import firsProject.booksProject.Services.BookService;
 import org.springframework.http.HttpStatus;
@@ -46,20 +44,20 @@ public class BookController {
 
    @GetMapping("/get/ByTitle/{title}")
     ResponseEntity<String> getByTitle(@PathVariable("title") String title) {
-        BookDto bookDto=bookService.getBookByTitle(title);
+        List<BookDto> bookDto=bookService.getAllBooksByTitle(title);
        if(bookDto==null) throw new BookNotFoundException("Book with "+title+" not found");
         return new ResponseEntity<>(bookDto.toString(), HttpStatus.OK);
    }
 
    @GetMapping("/get/ByAuthors")
-    ResponseEntity<String> getByAuthor(@RequestBody List<Author> authors) {
-        List<BookDto> booksDto=bookService.getBookByAuthors(authors);
+    ResponseEntity<String> getByAuthor(@RequestBody List<String> authors) {
+        List<BookDto> booksDto=bookService.getAllBooksByAuthors(authors);
         return new ResponseEntity<>(booksDto.toString(), HttpStatus.OK);
    }
 
    @GetMapping("/get/ByPublisher")
-    ResponseEntity<String> getByPublisher(@RequestBody Publisher publisher) {
-        List<BookDto> booksDto=bookService.getBookByPublisher(publisher);
+    ResponseEntity<String> getByPublisher(@RequestBody String publisher) {
+        List<BookDto> booksDto=bookService.getAllBooksByPublisher(publisher);
         return new ResponseEntity<>(booksDto.toString(), HttpStatus.OK);
    }
 

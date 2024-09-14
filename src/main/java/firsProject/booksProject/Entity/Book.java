@@ -1,17 +1,15 @@
 package firsProject.booksProject.Entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
@@ -23,17 +21,20 @@ public class Book {
     private String title;
     private String type;
     private String summary;
-    //@JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd-mm-yyyy")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateOfPublish;
     private int numOfPublish;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "author_id"))
-    private Set<Author> authors;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "publisher-id")
-    private Publisher publisher;
+    private Set<String> authors=new HashSet<>();
+    private String publisher;
 
-
+    public Book(long id, String title, String type, String summary, Date dateOfPublish, int numOfPublish, Set<String> authors, String publisher) {
+        this.id = id;
+        this.title = title;
+        this.type = type;
+        this.summary = summary;
+        this.dateOfPublish = dateOfPublish;
+        this.numOfPublish = numOfPublish;
+        this.authors = authors;
+        this.publisher = publisher;
+    }
 }

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Search By Authors</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <h1>Book Management System</h1>
+    <hr>
+    <h2>Search Book</h2>
+    <form action="#" method="post" th:action="@{/front/api/books/addAuthorForSearch}">
+        <input type="text" required name="author" th:value="*{author}" placeholder="Book Authors Name" class="form-control mb-4 col-4">
+        <button class="btn btn-primary" type="submit">add author</button>
+    </form>
+    <br>
+    <form action="#" method="post" th:action="@{/front/api/books/getBookByAuthors/Final}">
+        <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+    <hr>
+    <a th:href="@{/front/api/books/get}"> Back to Book List</a>
+</div>
+</body>
+</html>
