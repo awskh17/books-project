@@ -39,12 +39,14 @@ public class FrontBookController {
         String author=new String();
         model.addAttribute("book", bookDto);
         model.addAttribute("author", author);
+        model.addAttribute("authorstmp", authorstmp);
         return "addBook";
     }
     @GetMapping("update/{id}")
     public String updateForm(@PathVariable(value = "id") long id, Model model) {
         BookDto bookDto = bookService.getBookById(id);
         String author=new String();
+        model.addAttribute("authorstmp", authorstmp2);
         model.addAttribute("author", author);
         model.addAttribute("book", bookDto);
         bookService.deleteBook(bookDto.getId());

@@ -28,7 +28,6 @@ public class SecurityConfig {
         http
                 .authorizeRequests(
                         req -> req
-                                .requestMatchers("/api/books/get/**").permitAll()
                                 .requestMatchers("/api/books/**").hasRole("ADMIN")
                                 .requestMatchers("front/api/books/add").hasRole("ADMIN")
                                 .requestMatchers("front/api/books/addAuthor").hasRole("ADMIN")
@@ -36,7 +35,7 @@ public class SecurityConfig {
                                 .requestMatchers("front/api/books/save").hasRole("ADMIN")
                                 .requestMatchers("front/api/books/deleteBook/**").hasRole("ADMIN")
                                 .requestMatchers("front/api/books/**").permitAll()
-
+                                .requestMatchers("/api/books/get/**").permitAll()
                 )
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
@@ -61,6 +60,7 @@ public class SecurityConfig {
             }
         };
     }
+
 
     @Bean
     public CommandLineRunner load (MyUserRepo myUserRepo) {

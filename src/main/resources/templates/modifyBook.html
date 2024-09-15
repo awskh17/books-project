@@ -16,6 +16,9 @@
   <form action="#" th:action="@{/front/api/books/addAuthor}"  method="post" >
     <p>if you have more than one author please add them by here don't worry I can handle it</p>
     <input type="text"  th:value="${author}" name="author"  placeholder="Book authorName" class="form-control mb-4 col-4">
+    <ul th:each="author:${authorstmp}">
+      <li th:text="author"></li>
+    </ul>
     <button type="submit"  class="btn btn-info col-2"  >add Author</button>
   </form>
   <br>
