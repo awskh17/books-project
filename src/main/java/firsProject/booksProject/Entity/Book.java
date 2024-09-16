@@ -10,9 +10,16 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+@AllArgsConstructor
+>>>>>>> main
 @NoArgsConstructor
 @Setter
 @Getter
+=======
+>>>>>>> Stashed changes
 @Entity
 public class Book {
     @Id
@@ -27,6 +34,11 @@ public class Book {
     private Set<String> authors=new HashSet<>();
     private String publisher;
 
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> main
     public Book(long id, String title, String type, String summary, Date dateOfPublish, int numOfPublish, Set<String> authors, String publisher) {
         this.id = id;
         this.title = title;
@@ -37,4 +49,75 @@ public class Book {
         this.authors = authors;
         this.publisher = publisher;
     }
+<<<<<<< HEAD
+=======
+
+    public Book() {
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public Date getDateOfPublish() {
+        return dateOfPublish;
+    }
+
+    public void setDateOfPublish(Date dateOfPublish) {
+        this.dateOfPublish = dateOfPublish;
+    }
+
+    public int getNumOfPublish() {
+        return numOfPublish;
+    }
+
+    public void setNumOfPublish(int numOfPublish) {
+        this.numOfPublish = numOfPublish;
+    }
+
+    public Set<String> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(Set<String> authors) {
+        this.authors = authors;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+>>>>>>> Stashed changes
+>>>>>>> main
 }
