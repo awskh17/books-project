@@ -15,6 +15,9 @@
     <h2>Search Book</h2>
     <form action="#" method="post" th:action="@{/front/api/books/addAuthorForSearch}">
         <input type="text" required name="author" th:value="*{author}" placeholder="Book Authors Name" class="form-control mb-4 col-4">
+        <ul th:each="author:${authors}">
+            <li th:text="${author}"></li>
+        </ul>
         <button class="btn btn-primary" type="submit">add author</button>
     </form>
     <br>
