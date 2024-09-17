@@ -8,18 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-<<<<<<< HEAD
 
-=======
-<<<<<<< Updated upstream
-@AllArgsConstructor
->>>>>>> main
-@NoArgsConstructor
-@Getter
-@Setter
-=======
-
->>>>>>> Stashed changes
 public class BookDto {
     private long id;
     private String title;

@@ -10,16 +10,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
-@AllArgsConstructor
->>>>>>> main
-@NoArgsConstructor
-@Setter
-@Getter
-=======
->>>>>>> Stashed changes
 @Entity
 public class Book {
     @Id
@@ -34,11 +24,6 @@ public class Book {
     private Set<String> authors=new HashSet<>();
     private String publisher;
 
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> main
     public Book(long id, String title, String type, String summary, Date dateOfPublish, int numOfPublish, Set<String> authors, String publisher) {
         this.id = id;
         this.title = title;
@@ -49,9 +34,6 @@ public class Book {
         this.authors = authors;
         this.publisher = publisher;
     }
-<<<<<<< HEAD
-=======
-
     public Book() {
     }
 
@@ -118,6 +100,4 @@ public class Book {
     public void setPublisher(String publisher) {
         this.publisher = publisher;
     }
->>>>>>> Stashed changes
->>>>>>> main
 }
