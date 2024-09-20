@@ -13,23 +13,23 @@
   <h1>Modify Book</h1>
   <hr>
   <h2>Modify Book</h2>
-  <form action="#" th:action="@{/front/api/books/addAuthor}"  method="post" >
+  <form action="#" th:action="@{/front/api/books/modify/addAuthor/{id}(id=${book.getId()})}"  method="POST" >
     <p>if you have more than one author please add them by here don't worry I can handle it</p>
     <input type="text"  th:value="${author}" name="author"  placeholder="Book authorName" class="form-control mb-4 col-4">
     <ul th:each="author:${authorstmp}">
-      <li th:text="author"></li>
+      <li th:text="${author}"></li> <a class="btn btn-danger"  th:href="@{/front/api/books/delAuthor/{author}/{id}(author=${author},id=${book.getId()})}" >delete</a>
     </ul>
     <button type="submit"  class="btn btn-info col-2"  >add Author</button>
   </form>
   <br>
-  <form action="#" th:action="@{/front/api/books/save}" th:object="${book}" method="POST">
+  <form action="#" th:action="@{/front/api/books/modify/{id}(id=${book.getId()})}" th:object="${book}" method="POST">
     <input type="text" required th:field="*{title}" placeholder="Book title" class="form-control mb-4 col-4">
     <input type="text" required th:field="*{type}" placeholder="Book type" class="form-control mb-4 col-4">
     <input type="text" required th:field="*{summary}" placeholder="Book summary" class="form-control mb-4 col-4">
     <input type="date" required th:field="*{dateOfPublish}" placeholder="Book dateOfPublish" class="form-control mb-4 col-4">
     <input type="number" required th:field="*{numOfPublish}" placeholder="Book numOfPublish" class="form-control mb-4 col-4">
     <input type="text" required th:field="*{publisher}" placeholder="Book Publisher" class="form-control mb-4 col-4">
-    <button type="submit" class="btn btn-info col-2" th:href="@{/front/api/books/save}">Save Book</button>
+    <button type="submit" class="btn btn-info col-2" th:href="@{/front/api/books/modify/{id}(id=${book.getId()})}">Save Edited Book</button>
   </form>
 
   <hr>

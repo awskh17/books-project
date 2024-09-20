@@ -13,13 +13,14 @@
   <h1>Book Management System</h1>
   <hr>
   <h2>Save Book</h2>
+  <br>
+  <p>if you have more than one author please add them by here don't worry I can handle it</p>
   <form action="#" th:action="@{/front/api/books/addAuthor}"  method="post" >
-    <p>if you have more than one author please add them by here don't worry I can handle it</p>
-  <input type="text"  th:value="${author}" name="author"  placeholder="Book authorName" class="form-control mb-4 col-4">
+  <input type="text"  th:value="${author}" name="author"   placeholder="Book authorName" class="form-control mb-4 col-4">
   <ul th:each="author:${authorstmp}">
-    <li th:text="${author}"></li>
+    <li th:text="${author}"></li> <a class="btn btn-danger"  th:href="@{/front/api/books/delAuthor/{author}(author=${author})}" >delete</a>
   </ul>
-   <button type="submit"  class="btn btn-info col-2"  >add Author</button>
+  <button  th:href="@{/front/api/books/addAuthor}"  class="btn btn-info col-2" method="submit" >add Author</button>
   </form>
   <br>
   <form action="#" th:action="@{/front/api/books/save}" th:object="${book}" method="POST">

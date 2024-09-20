@@ -51,11 +51,19 @@ public class FrontBookController {
     public String updateForm(@PathVariable(value = "id") long id, Model model) {
         BookDto bookDto = bookService.getBookById(id);
         String author=new String();
-        model.addAttribute("authorstmp", authorstmp2);
+        authorstmp.addAll(bookDto.getAuthors());
+        model.addAttribute("authorstmp", authorstmp);
         model.addAttribute("author", author);
         model.addAttribute("book", bookDto);
-        bookService.deleteBook(bookDto.getId());
         return "modifyBook";
+    }
+    @PostMapping("/front/api/books/modify/{id}")
+    public String modify(@PathVariable long id,@ModelAttribute("book") BookDto bookDto)
+    {
+        bookDto.setAuthors(authorstmp);
+        bookService.updateBookById(bookDto,id);
+        authorstmp.clear();
+        return "redirect:/front/api/books/get";
     }
     @PostMapping("/front/api/books/addAuthor")
     public String addAuthor(@RequestParam String author){
@@ -63,6 +71,15 @@ public class FrontBookController {
         {authorstmp.add(author);}
         return "redirect:/front/api/books/add";
     }
+
+    @PostMapping("/front/api/books/modify/addAuthor/{id}")
+    public String modifyAddAuthor(@RequestParam String author,@PathVariable long id){
+        if(!Objects.equals(author, ""))
+        {authorstmp.add(author);}
+        System.out.println(authorstmp);
+        return "redirect:/front/api/books/update/"+id;
+    }
+
     @PostMapping("/front/api/books/save")
     public String saveBook(@ModelAttribute("book") BookDto bookDto) {
         if(authorstmp.isEmpty()) {throw new AuthorNotAddedException("error there isnt any author here");}
@@ -79,6 +96,20 @@ public class FrontBookController {
     bookService.deleteBook(id);
     return "redirect:/front/api/books/get";
 }
+    @GetMapping("/front/api/books/delAuthor/search/{author}")
+    public String delAuthor(@PathVariable(value = "author") String author)
+    {
+        if(!authorstmp2.isEmpty())
+            authorstmp2.remove(author);
+        return "redirect:/front/api/books/searchAuthor";
+    }
+    @GetMapping("/front/api/books/delAuthor/{author}/{id}")
+    public String delAuthor(@PathVariable(value = "author") String author,@PathVariable long id)
+    {
+        if(authorstmp.size()>1)
+        authorstmp.remove(author);
+        return "redirect:/front/api/books/update/"+id;
+    }
     @GetMapping("/front/api/books/searchId")
     public String getId(Model model)
     {
@@ -131,6 +162,7 @@ public class FrontBookController {
     public String searchAuthor(Model model) {
         String author = null;
         model.addAttribute("author", author);
+        model.addAttribute("authorstmp",authorstmp2);
         return "searchAuthor";
     }
 

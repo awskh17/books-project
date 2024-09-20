@@ -28,12 +28,12 @@ public class SecurityConfig {
         http
                 .authorizeRequests(
                         req -> req
-                                .requestMatchers("/api/books/**").hasRole("ADMIN")
-                                .requestMatchers("front/api/books/add").hasRole("ADMIN")
-                                .requestMatchers("front/api/books/addAuthor").hasRole("ADMIN")
-                                .requestMatchers("front/api/books/update/**").hasRole("ADMIN")
-                                .requestMatchers("front/api/books/save").hasRole("ADMIN")
-                                .requestMatchers("front/api/books/deleteBook/**").hasRole("ADMIN")
+//                                .requestMatchers("/api/books/**").hasRole("ADMIN")
+//                                .requestMatchers("front/api/books/add").hasRole("ADMIN")
+//                                .requestMatchers("front/api/books/addAuthor").hasRole("ADMIN")
+//                                .requestMatchers("front/api/books/update/**").hasRole("ADMIN")
+//                                .requestMatchers("front/api/books/save").hasRole("ADMIN")
+//                                .requestMatchers("front/api/books/deleteBook/**").hasRole("ADMIN")
                                 .requestMatchers("front/api/books/**").permitAll()
                                 .requestMatchers("/api/books/get/**").permitAll()
                 )
