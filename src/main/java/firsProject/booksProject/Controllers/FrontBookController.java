@@ -35,6 +35,8 @@ public class FrontBookController {
     }
     @GetMapping("/front/api/books/get")
     public String getBooks(Model model) {
+        authorstmp.clear();
+        authorstmp2.clear();
         model.addAttribute("book", bookService.getAllBooks());
         return "/allBooks";
     }
@@ -51,6 +53,7 @@ public class FrontBookController {
     public String updateForm(@PathVariable(value = "id") long id, Model model) {
         BookDto bookDto = bookService.getBookById(id);
         String author=new String();
+        if(authorstmp.isEmpty())
         authorstmp.addAll(bookDto.getAuthors());
         model.addAttribute("authorstmp", authorstmp);
         model.addAttribute("author", author);
@@ -76,7 +79,6 @@ public class FrontBookController {
     public String modifyAddAuthor(@RequestParam String author,@PathVariable long id){
         if(!Objects.equals(author, ""))
         {authorstmp.add(author);}
-        System.out.println(authorstmp);
         return "redirect:/front/api/books/update/"+id;
     }
 
@@ -96,6 +98,14 @@ public class FrontBookController {
     bookService.deleteBook(id);
     return "redirect:/front/api/books/get";
 }
+    @GetMapping("/front/api/books/delAuthor/{author}")
+    public String delAuth(@PathVariable(value = "author") String author)
+    {
+        if(!authorstmp.isEmpty())
+            authorstmp.remove(author);
+        return "redirect:/front/api/books/add";
+    }
+
     @GetMapping("/front/api/books/delAuthor/search/{author}")
     public String delAuthor(@PathVariable(value = "author") String author)
     {

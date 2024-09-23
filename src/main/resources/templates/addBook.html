@@ -15,7 +15,7 @@
   <h2>Save Book</h2>
   <br>
   <p>if you have more than one author please add them by here don't worry I can handle it</p>
-  <form action="#" th:action="@{/front/api/books/addAuthor}"  method="post" >
+  <form action="#" th:action="@{/front/api/books/addAuthor}"  method="POST" >
   <input type="text"  th:value="${author}" name="author"   placeholder="Book authorName" class="form-control mb-4 col-4">
   <ul th:each="author:${authorstmp}">
     <li th:text="${author}"></li> <a class="btn btn-danger"  th:href="@{/front/api/books/delAuthor/{author}(author=${author})}" >delete</a>

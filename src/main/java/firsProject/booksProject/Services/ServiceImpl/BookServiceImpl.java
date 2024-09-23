@@ -52,7 +52,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookDto> getAllBooksByTitle(String title) {
         List<Book> book=bookRepo.findAllByTitle(title);
-        if(book==null) {throw new BookNotFoundException("The Book With Title : "+title+" Is Not Found"); }
+//        if(book==null) {throw new BookNotFoundException("The Book With Title : "+title+" Is Not Found"); }
         return book.stream().map(BookMapper::mapToBookDTO).toList();
     }
 
@@ -65,7 +65,7 @@ public class BookServiceImpl implements BookService {
                     res.add(book);
                 }
             }
-        if(res.size()==0) {throw new BookNotFoundException("The Book With Publisher : "+publisher+" Is Not Found"); }
+//        if(res.size()==0) {throw new BookNotFoundException("The Book With Publisher : "+publisher+" Is Not Found"); }
         return res.stream().map(b -> BookMapper.mapToBookDTO(b)).toList();
     }
 
@@ -80,7 +80,7 @@ public class BookServiceImpl implements BookService {
                 }
             }
         }
-        if(books.size()==0) {throw new BookNotFoundException("The Book With Authors : "+authors+" Is Not Found"); }
+//        if(books.size()==0) {throw new BookNotFoundException("The Book With Authors : "+authors+" Is Not Found"); }
         return res.stream().map(b -> BookMapper.mapToBookDTO(b)).toList();
     }
 
