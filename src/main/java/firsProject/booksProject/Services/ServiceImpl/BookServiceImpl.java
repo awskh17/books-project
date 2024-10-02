@@ -31,13 +31,13 @@ public class BookServiceImpl implements BookService {
         Book book = BookMapper.mapToBook(bookDto);
         List<Publisher> publishers = null;
         Publisher publisher=null;
-        if(publisherRepo.findAllByName(bookDto.getPublisher().getName())==null)
+        if(publisherRepo.findByName(bookDto.getPublisher().getName())==null)
         {
             publisherRepo.save(bookDto.getPublisher());
         }
-        publisher=bookDto.getPublisher();
-        publishers=publisherRepo.findAllByName(publisher.getName());
-        publishers.stream().map(p ->p.getBooks().add(BookMapper.mapToBook(bookDto)));
+        publisher=publisherRepo.findByName(bookDto.getPublisher().getName());
+        book.setPublisher(publisher);
+        publisher.getBooks().add(book);
         Book savedBook =  bookRepo.save(book);
         return BookMapper.mapToBookDTO(savedBook);
     }
@@ -45,9 +45,24 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto updateBookById(BookDto bookDto,long id) {
        Book book= bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException("The Book With Id : "+id+" Is Not Found"));
-        bookRepo.delete(book);
-       return addBook(bookDto);
-
+       if(book!=null) book=bookRepo.getReferenceById(id);
+       book.setAuthors(bookDto.getAuthors());
+       book.setSummary(bookDto.getSummary());
+       book.setType(bookDto.getType());
+       book.setTitle(bookDto.getTitle());
+       book.setDateOfPublish(bookDto.getDateOfPublish());
+       book.setNumOfPublish(bookDto.getNumOfPublish());
+       //publisher
+        Publisher publisher=publisherRepo.getReferenceById(book.getPublisher().getId());
+        if(publisherRepo.findByName(bookDto.getPublisher().getName())==null)
+        {
+            publisherRepo.save(bookDto.getPublisher());
+        }
+        publisher=publisherRepo.findByName(bookDto.getPublisher().getName());
+        book.setPublisher(publisher);
+        publisher.getBooks().add(book);
+        Book savedBook=bookRepo.save(book);
+        return BookMapper.mapToBookDTO(savedBook);
     }
 
     @Override
@@ -75,14 +90,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookDto> getAllBooksByPublisher(String publisher) {
-        List<Publisher> publishers=publisherRepo.findAllByName(publisher);
-        System.out.println(publisher);
-        System.out.println(publishers);
         List<Book> books=new ArrayList<>();
-        for(Publisher publisher1:publishers){
-        books.addAll(publisher1.getBooks());
-        }
-        System.out.println(books);
+        Publisher publisher1=publisherRepo.findByName(publisher);
+        books=bookRepo.findAllByPublisher(publisher1);
         return books.stream().map(BookMapper::mapToBookDTO).toList();
     }
 
