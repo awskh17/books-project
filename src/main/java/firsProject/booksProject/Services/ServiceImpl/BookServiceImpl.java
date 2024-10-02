@@ -2,12 +2,15 @@ package firsProject.booksProject.Services.ServiceImpl;
 
 import firsProject.booksProject.Dtos.BookDto;
 import firsProject.booksProject.Entity.Book;
+import firsProject.booksProject.Entity.Publisher;
 import firsProject.booksProject.Exceptions.BookNotFoundException;
 import firsProject.booksProject.Mapper.BookMapper;
 import firsProject.booksProject.Repositories.BookRepo;
+import firsProject.booksProject.Repositories.PublisherRepo;
 import firsProject.booksProject.Services.BookService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,14 +19,25 @@ import java.util.Set;
 public class BookServiceImpl implements BookService {
 
     BookRepo bookRepo;
+    PublisherRepo publisherRepo;
 
-    public BookServiceImpl(BookRepo bookRepo) {
+    public BookServiceImpl(BookRepo bookRepo, PublisherRepo publisherRepo) {
         this.bookRepo = bookRepo;
+        this.publisherRepo = publisherRepo;
     }
 
     @Override
     public BookDto addBook(BookDto bookDto) {
         Book book = BookMapper.mapToBook(bookDto);
+        List<Publisher> publishers = null;
+        Publisher publisher=null;
+        if(publisherRepo.findAllByName(bookDto.getPublisher().getName())==null)
+        {
+            publisherRepo.save(bookDto.getPublisher());
+        }
+        publisher=bookDto.getPublisher();
+        publishers=publisherRepo.findAllByName(publisher.getName());
+        publishers.stream().map(p ->p.getBooks().add(BookMapper.mapToBook(bookDto)));
         Book savedBook =  bookRepo.save(book);
         return BookMapper.mapToBookDTO(savedBook);
     }
@@ -39,6 +53,9 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteBook(long id) {
         Book book= bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException("The Book With Id : "+id+" Is Not Found"));
+        Publisher publisher=book.getPublisher();
+        if(publisher.getBooks().size()==1) publisherRepo.delete(publisher);
+        else publisher.getBooks().remove(book);
         bookRepo.delete(book);
     }
 
@@ -58,15 +75,15 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookDto> getAllBooksByPublisher(String publisher) {
-        Set<Book> books=new HashSet<>(bookRepo.findAll());
-        Set<Book> res=new HashSet<>();
-            for (Book book : books) {
-                 if(book.getPublisher().equals(publisher)) {
-                    res.add(book);
-                }
-            }
-//        if(res.size()==0) {throw new BookNotFoundException("The Book With Publisher : "+publisher+" Is Not Found"); }
-        return res.stream().map(b -> BookMapper.mapToBookDTO(b)).toList();
+        List<Publisher> publishers=publisherRepo.findAllByName(publisher);
+        System.out.println(publisher);
+        System.out.println(publishers);
+        List<Book> books=new ArrayList<>();
+        for(Publisher publisher1:publishers){
+        books.addAll(publisher1.getBooks());
+        }
+        System.out.println(books);
+        return books.stream().map(BookMapper::mapToBookDTO).toList();
     }
 
     @Override

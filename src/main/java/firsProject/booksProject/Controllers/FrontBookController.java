@@ -88,7 +88,7 @@ public class FrontBookController {
         bookDto.setAuthors(authorstmp);
         if(bookDto.getDateOfPublish().compareTo(Date.from(LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC))) == 1)
         {throw new DateNotTrueException("date is not Acceptable");}
-        if(bookDto.getNumOfPublish()==0) throw new NumOfPublishException("numOfPublish is not acceptable");
+        if(bookDto.getNumOfPublish()<1) throw new NumOfPublishException("numOfPublish is not acceptable");
         bookService.addBook(bookDto);
         authorstmp.clear();
         return "redirect:/front/api/books/get";
