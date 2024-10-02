@@ -53,7 +53,9 @@ public class BookServiceImpl implements BookService {
        book.setDateOfPublish(bookDto.getDateOfPublish());
        book.setNumOfPublish(bookDto.getNumOfPublish());
        //publisher
-        Publisher publisher=null;
+        Publisher publisher=publisherRepo.getReferenceById(book.getPublisher().getId());
+        publisher.getBooks().remove(book);
+        publisherRepo.save(publisher);
         if(publisherRepo.findByName(bookDto.getPublisher().getName())==null)
         {
             publisherRepo.save(bookDto.getPublisher());
