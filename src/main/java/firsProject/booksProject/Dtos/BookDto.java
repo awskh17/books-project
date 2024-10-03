@@ -1,5 +1,6 @@
 package firsProject.booksProject.Dtos;
 
+import firsProject.booksProject.Entity.Author;
 import firsProject.booksProject.Entity.Publisher;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,7 +25,13 @@ public class BookDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateOfPublish;
     private int numOfPublish;
-    private Set<String> authors=new HashSet<>();
+    private Set<Author> authors=new HashSet<>();
     private Publisher publisher;
+
+    public Set<String> getAuthorsName(){
+        Set<String> res=new HashSet<>();
+        for(Author author:authors) res.add(author.getName());
+        return res;
+    }
 
 }

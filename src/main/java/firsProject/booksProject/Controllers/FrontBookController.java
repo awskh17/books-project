@@ -1,6 +1,7 @@
 package firsProject.booksProject.Controllers;
 
 import firsProject.booksProject.Dtos.BookDto;
+import firsProject.booksProject.Entity.Author;
 import firsProject.booksProject.Exceptions.AuthorNotAddedException;
 import firsProject.booksProject.Exceptions.BookNotFoundException;
 import firsProject.booksProject.Exceptions.DateNotTrueException;
@@ -23,6 +24,7 @@ public class FrontBookController {
     private BookService bookService;
     Set<String> authorstmp =new HashSet<>();
     Set<String> authorstmp2 =new HashSet<>();
+    Set<String> authorstmp3 =new HashSet<>();
 
     public FrontBookController(BookService bookService) {
         this.bookService = bookService;
@@ -53,9 +55,8 @@ public class FrontBookController {
     public String updateForm(@PathVariable(value = "id") long id, Model model) {
         BookDto bookDto = bookService.getBookById(id);
         String author=new String();
-        if(authorstmp.isEmpty())
-        authorstmp.addAll(bookDto.getAuthors());
-        model.addAttribute("authorstmp", authorstmp);
+        authorstmp3.addAll(bookDto.getAuthorsName());
+        model.addAttribute("authorstmp", authorstmp3);
         model.addAttribute("author", author);
         model.addAttribute("book", bookDto);
         return "modifyBook";
@@ -63,9 +64,14 @@ public class FrontBookController {
     @PostMapping("/front/api/books/modify/{id}")
     public String modify(@PathVariable long id,@ModelAttribute("book") BookDto bookDto)
     {
-        bookDto.setAuthors(authorstmp);
+        for(String name:authorstmp3)
+        {
+            Author author=new Author();
+            author.setName(name);
+            bookDto.getAuthors().add(author);
+        }
         bookService.updateBookById(bookDto,id);
-        authorstmp.clear();
+        authorstmp3.clear();
         return "redirect:/front/api/books/get";
     }
     @PostMapping("/front/api/books/addAuthor")
@@ -78,14 +84,20 @@ public class FrontBookController {
     @PostMapping("/front/api/books/modify/addAuthor/{id}")
     public String modifyAddAuthor(@RequestParam String author,@PathVariable long id){
         if(!Objects.equals(author, ""))
-        {authorstmp.add(author);}
+        {authorstmp3.add(author);}
         return "redirect:/front/api/books/update/"+id;
     }
 
     @PostMapping("/front/api/books/save")
     public String saveBook(@ModelAttribute("book") BookDto bookDto) {
         if(authorstmp.isEmpty()) {throw new AuthorNotAddedException("error there isnt any author here");}
-        bookDto.setAuthors(authorstmp);
+        Set <Author> authors=new HashSet<>();
+        for(String author:authorstmp){
+            Author res=new Author();
+            res.setName(author);
+            authors.add(res);
+        }
+        bookDto.setAuthors(authors);
         if(bookDto.getDateOfPublish().compareTo(Date.from(LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC))) == 1)
         {throw new DateNotTrueException("date is not Acceptable");}
         if(bookDto.getNumOfPublish()<1) throw new NumOfPublishException("numOfPublish is not acceptable");
@@ -116,8 +128,8 @@ public class FrontBookController {
     @GetMapping("/front/api/books/delAuthor/{author}/{id}")
     public String delAuthor(@PathVariable(value = "author") String author,@PathVariable long id)
     {
-        if(authorstmp.size()>1)
-        authorstmp.remove(author);
+        if(!authorstmp3.isEmpty())
+        authorstmp3.remove(author);
         return "redirect:/front/api/books/update/"+id;
     }
     @GetMapping("/front/api/books/searchId")
@@ -160,7 +172,7 @@ public class FrontBookController {
     public String getBookByPublisher(Model model) {
         model.addAttribute("book", bookService.getAllBooksByAuthors(authorstmp2.stream().toList()));
         authorstmp2.clear();
-        return "SearchedByPublisher";
+        return "SearchedByAuthor";
     }
     @PostMapping("/front/api/books/addAuthorForSearch")
     public String addAuthorSearch(@RequestParam String author){

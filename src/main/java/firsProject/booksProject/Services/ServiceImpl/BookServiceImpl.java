@@ -1,10 +1,12 @@
 package firsProject.booksProject.Services.ServiceImpl;
 
 import firsProject.booksProject.Dtos.BookDto;
+import firsProject.booksProject.Entity.Author;
 import firsProject.booksProject.Entity.Book;
 import firsProject.booksProject.Entity.Publisher;
 import firsProject.booksProject.Exceptions.BookNotFoundException;
 import firsProject.booksProject.Mapper.BookMapper;
+import firsProject.booksProject.Repositories.AuthorRepo;
 import firsProject.booksProject.Repositories.BookRepo;
 import firsProject.booksProject.Repositories.PublisherRepo;
 import firsProject.booksProject.Services.BookService;
@@ -14,22 +16,24 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService {
 
     BookRepo bookRepo;
     PublisherRepo publisherRepo;
+    AuthorRepo authorRepo;
 
-    public BookServiceImpl(BookRepo bookRepo, PublisherRepo publisherRepo) {
+    public BookServiceImpl(BookRepo bookRepo, PublisherRepo publisherRepo, AuthorRepo authorRepo) {
         this.bookRepo = bookRepo;
         this.publisherRepo = publisherRepo;
+        this.authorRepo = authorRepo;
     }
 
     @Override
     public BookDto addBook(BookDto bookDto) {
         Book book = BookMapper.mapToBook(bookDto);
-        List<Publisher> publishers = null;
         Publisher publisher=null;
         if(publisherRepo.findByName(bookDto.getPublisher().getName())==null)
         {
@@ -38,6 +42,16 @@ public class BookServiceImpl implements BookService {
         publisher=publisherRepo.findByName(bookDto.getPublisher().getName());
         book.setPublisher(publisher);
         publisher.getBooks().add(book);
+
+        List <Author> authors=book.getAuthors().stream().toList();
+        book.getAuthors().clear();
+        for(Author author:authors)
+        {
+            if(authorRepo.findByName(author.getName())==null)
+               authorRepo.save(author);
+            author.getBooks().add(book);
+            book.getAuthors().add(authorRepo.findByName(author.getName()));
+        }
         Book savedBook =  bookRepo.save(book);
         return BookMapper.mapToBookDTO(savedBook);
     }
@@ -46,7 +60,7 @@ public class BookServiceImpl implements BookService {
     public BookDto updateBookById(BookDto bookDto,long id) {
        Book book= bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException("The Book With Id : "+id+" Is Not Found"));
        if(book!=null) book=bookRepo.getReferenceById(id);
-       book.setAuthors(bookDto.getAuthors());
+       //book.setAuthors(bookDto.getAuthors());
        book.setSummary(bookDto.getSummary());
        book.setType(bookDto.getType());
        book.setTitle(bookDto.getTitle());
@@ -63,7 +77,27 @@ public class BookServiceImpl implements BookService {
         publisher=publisherRepo.findByName(bookDto.getPublisher().getName());
         book.setPublisher(publisher);
         publisher.getBooks().add(book);
+        //author
+        Set<Author> authors=book.getAuthors();
+        for(Author author:authors)
+        {
+            author=authorRepo.getReferenceById(author.getId());
+            author.getBooks().remove(book);
+            authorRepo.save(author);
+        }
+        System.out.println("removed suc");
+        authors=bookDto.getAuthors();
+        book.getAuthors().clear();
+        System.out.println("cleared suc");
+        for(Author author:authors)
+        {
+            if(authorRepo.findByName(author.getName())==null) authorRepo.save(author);
+            author=authorRepo.findByName(author.getName());
+            book.getAuthors().add(author);
+            author.getBooks().add(book);
+        }
         Book savedBook=bookRepo.save(book);
+        System.out.println(authorRepo.findAll());
         return BookMapper.mapToBookDTO(savedBook);
     }
 
@@ -71,8 +105,13 @@ public class BookServiceImpl implements BookService {
     public void deleteBook(long id) {
         Book book= bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException("The Book With Id : "+id+" Is Not Found"));
         Publisher publisher=book.getPublisher();
+        Set <Author> authors=book.getAuthors();
         if(publisher.getBooks().size()==1) publisherRepo.delete(publisher);
         else publisher.getBooks().remove(book);
+        for(Author author:authors)
+        {if(author.getBooks().size()==1) authorRepo.delete(author);
+            else author.getBooks().remove(book);
+        }
         bookRepo.delete(book);
     }
 
@@ -100,17 +139,23 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookDto> getAllBooksByAuthors(List<String> authors) {
-        Set<Book> books=new HashSet<>(bookRepo.findAll());
-        Set<Book> res=new HashSet<>();
-        for(String author : authors) {
-            for (Book book : books) {
-                for(String author1:book.getAuthors()) {
-                  if(author.equals(author1)) {res.add(book);}
-                }
-            }
+        Set<Book> books=new HashSet<>();
+        Set <Author> authors1=new HashSet<>();
+        System.out.println("before");
+        for(String name:authors) {
+            Author a=authorRepo.findByName(name);
+            if(a!=null)
+            authors1.add(a);
         }
-//        if(books.size()==0) {throw new BookNotFoundException("The Book With Authors : "+authors+" Is Not Found"); }
-        return res.stream().map(b -> BookMapper.mapToBookDTO(b)).toList();
+
+        System.out.println("first"+authors1);
+        for(Author author:authors1)
+            books.addAll(bookRepo.findAllByAuthors(author));
+        //System.out.println(bookRepo.findAllByAuthors(authors1));
+        //books=bookRepo.findAllByAuthors(authors1);
+        System.out.println("hi"+books);
+        return books.stream().map(BookMapper::mapToBookDTO).toList();
+
     }
 
     @Override

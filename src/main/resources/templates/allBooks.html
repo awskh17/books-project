@@ -38,7 +38,7 @@
             <td th:text="${book.getDateOfPublish()}"></td>
             <td th:text="${book.getNumOfPublish()}"></td>
             <td th:text="${book.getPublisher().getName()}"></td>
-            <td th:text="${book.getAuthors()}"></td>
+            <td  th:text="${book.getAuthorsName()}"></td>
              <td>
                  <a th:href="@{/front/api/books/update/{id}(id=${book.getId()})}"
                     class="btn btn-primary">Update</a>

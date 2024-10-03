@@ -26,9 +26,14 @@ public class Book {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateOfPublish;
     private int numOfPublish;
-    private Set<String> authors=new HashSet<>();
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "Book_Author",joinColumns = @JoinColumn(name = "Book_Id"),inverseJoinColumns = @JoinColumn(name = "Author_Id"))
+    private Set<Author> authors=new HashSet<>();
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "publisher_Id")
     private Publisher publisher;
+
+
+
 
 }
