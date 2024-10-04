@@ -2,10 +2,7 @@ package firsProject.booksProject.Controllers;
 
 import firsProject.booksProject.Dtos.BookDto;
 import firsProject.booksProject.Entity.Author;
-import firsProject.booksProject.Exceptions.AuthorNotAddedException;
-import firsProject.booksProject.Exceptions.BookNotFoundException;
-import firsProject.booksProject.Exceptions.DateNotTrueException;
-import firsProject.booksProject.Exceptions.NumOfPublishException;
+import firsProject.booksProject.Exceptions.*;
 import firsProject.booksProject.Services.BookService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -225,24 +222,27 @@ public class FrontBookController {
         model.addAttribute("book", bookService.getBookBySummary(summary));
         return "SearchedBySummary";
     }
-    @GetMapping("/front/api/books/signup")
-    public String signup(Model model)
-    {
-        String name= "";
-        String pass= "";
-        model.addAttribute("name",name);
-        model.addAttribute("pass",pass);
-        return "signup";
-    }
-    @PostMapping("/front/api/books/signedup")
-    public String signedup (@RequestParam String name,@RequestParam String pass)
-    {
-       bookService.userup(name,pass);
-       return "redirect:/front/api/books/get";
-    }
     @GetMapping("/login")
     public String login(){
         return "login";
     }
+    @GetMapping("/signup")
+    public String signup(Model model){
+        String name="";
+        String pass="";
+        String pass2="";
+        model.addAttribute("name",name);
+        model.addAttribute("pass",pass);
+        model.addAttribute("pass2",pass2);
+        return "signup";
+    }
+    @PostMapping("/signedup")
+    public String signedup(@RequestParam String name,@RequestParam String pass,@RequestParam String pass2)
+    {
+        if(!Objects.equals(pass, pass2)) throw new PasswordNotCorrect("password not correct");
+        bookService.adduser(name,pass);
+        return "login";
+    }
+
 
 }

@@ -6,11 +6,13 @@ import firsProject.booksProject.Entity.Book;
 import firsProject.booksProject.Entity.MyUser;
 import firsProject.booksProject.Entity.Publisher;
 import firsProject.booksProject.Exceptions.BookNotFoundException;
+import firsProject.booksProject.Exceptions.UserFoundException;
 import firsProject.booksProject.Mapper.BookMapper;
 import firsProject.booksProject.Repositories.AuthorRepo;
 import firsProject.booksProject.Repositories.BookRepo;
 import firsProject.booksProject.Repositories.MyUserRepo;
 import firsProject.booksProject.Repositories.PublisherRepo;
+import firsProject.booksProject.Security.SecurityConfig;
 import firsProject.booksProject.Services.BookService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -169,16 +171,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public CommandLineRunner userup(String name, String pass) {
-        return args -> {
-            MyUser user1=new MyUser();
-            user1.setUsername(name);
-            user1.setPassword(passwordEncoder().encode(pass));
-            user1.setRoles(Set.of("USER"));
-            if(userRepo.findByUsername(name)==null)
-            userRepo.save(user1);
-            else throw new NotAcceptableStatusException("this username is token before,please try another name");
-        };
+    public MyUser adduser(String name, String pass) {
+        if(userRepo.findByUsername(name)!=null) throw new UserFoundException("there is another user with same username change it please");
+        MyUser user=new MyUser();
+        user.setUsername(name);
+        user.setPassword(passwordEncoder().encode(pass));
+        user.setRoles(Set.of("USER"));
+        MyUser saveduser=userRepo.save(user);
+        return saveduser;
     }
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
