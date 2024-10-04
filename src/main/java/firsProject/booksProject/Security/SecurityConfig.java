@@ -28,14 +28,17 @@ public class SecurityConfig {
         http
                 .authorizeRequests(
                         req -> req
-//                                .requestMatchers("/api/books/**").hasRole("ADMIN")
-//                                .requestMatchers("front/api/books/add").hasRole("ADMIN")
-//                                .requestMatchers("front/api/books/addAuthor").hasRole("ADMIN")
-//                                .requestMatchers("front/api/books/update/**").hasRole("ADMIN")
-//                                .requestMatchers("front/api/books/save").hasRole("ADMIN")
-//                                .requestMatchers("front/api/books/deleteBook/**").hasRole("ADMIN")
-                                .requestMatchers("front/api/books/**").permitAll()
-                                .requestMatchers("/api/books/get/**").permitAll()
+                                .requestMatchers("/api/books/**").hasRole("ADMIN")
+                                .requestMatchers("front/api/books/add").hasRole("ADMIN")
+                                .requestMatchers("front/api/books/addAuthor").hasRole("ADMIN")
+                                .requestMatchers("front/api/books/update/**").hasRole("ADMIN")
+                                .requestMatchers("front/api/books/save").hasRole("ADMIN")
+                                .requestMatchers("front/api/books/deleteBook/**").hasRole("ADMIN")
+                                .requestMatchers("front/api/books/signup").permitAll()
+                                .requestMatchers("front/api/books/signedup").permitAll()
+                                .requestMatchers("front/api/books/**").hasRole("USER")
+                                .requestMatchers("/api/books/get/**").hasRole("USER")
+
                 )
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
@@ -50,7 +53,8 @@ public class SecurityConfig {
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
                 MyUser myUser = myUserRepo.findByUsername(username);
                 System.out.println(myUser);
-                if (myUser == null) {throw new UserNotFoundException(username+"not found");}
+                if (myUser == null)
+                {throw new UserNotFoundException(username+"not found");}
                 UserDetails userDetails=User.builder()
                         .username(myUser.getUsername())
                         .password(myUser.getPassword())
@@ -65,16 +69,11 @@ public class SecurityConfig {
     @Bean
     public CommandLineRunner load (MyUserRepo myUserRepo) {
         return args -> {
-            MyUser user1=new MyUser();
-            user1.setUsername("user1");
-            user1.setPassword(passwordEncoder().encode("user1"));
-            user1.setRoles(Set.of("USER"));
-            myUserRepo.save(user1);
-            MyUser user2=new MyUser();
-            user2.setUsername("admin1");
-            user2.setPassword(passwordEncoder().encode("admin1"));
-            user2.setRoles(Set.of("USER","ADMIN"));
-            myUserRepo.save(user2);
+            MyUser user=new MyUser();
+            user.setUsername("admin");
+            user.setPassword(passwordEncoder().encode("admin"));
+            user.setRoles(Set.of("USER","ADMIN"));
+            myUserRepo.save(user);
             };
     }
 

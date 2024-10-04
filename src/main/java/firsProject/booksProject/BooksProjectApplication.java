@@ -8,4 +8,3 @@ public class BooksProjectApplication {
 		SpringApplication.run(BooksProjectApplication.class, args);
 	}
 }
-	

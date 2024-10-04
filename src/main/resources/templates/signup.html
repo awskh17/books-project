@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>SignUp</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <h1>SignUp</h1>
+    <form action="#" th:action="@{/front/api/books/signedup}"  method="POST" >
+        <input type="text"  th:value="${name}" name="name"   placeholder="NameOfUser" class="form-control mb-4 col-4">
+        <br>
+        <input type="text"  th:value="${pass}" name="pass"   placeholder="password" class="form-control mb-4 col-4">
+        <br>
+        <button  th:href="@{/front/api/books/signedup}"  class="btn btn-info col-2" method="submit" >SignUP Now</button>
+    </form>
+</div>
+</body>
+</html>

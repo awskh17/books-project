@@ -39,7 +39,7 @@
             <td th:text="${book.getPublisher().getName()}"></td>
             <td th:text="${book.getAuthorsName()}"></td>
             <td>
-                <a th:href="@{/front/api/books/{id}(id=${book.getId()})}"
+                <a th:href="@{/front/api/books/update/{id}(id=${book.getId()})}"
                    class="btn btn-primary">Update</a>
                 <a th:href="@{/front/api/books/deleteBook/{id}(id=${book.getId()})}"
                    class="btn btn-danger">Delete</a>

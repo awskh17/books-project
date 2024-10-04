@@ -224,5 +224,19 @@ public class FrontBookController {
         model.addAttribute("book", bookService.getBookBySummary(summary));
         return "SearchedBySummary";
     }
-
+    @GetMapping("/front/api/books/signup")
+    public String signup(Model model)
+    {
+        String name= "";
+        String pass= "";
+        model.addAttribute("name",name);
+        model.addAttribute("pass",pass);
+        return "signup";
+    }
+    @PostMapping("/front/api/books/signedup")
+    public String signedup (@RequestParam String name,@RequestParam String pass)
+    {
+       bookService.userup(name,pass);
+       return "allBooks";
+    }
 }

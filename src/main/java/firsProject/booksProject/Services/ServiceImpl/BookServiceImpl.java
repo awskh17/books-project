@@ -3,20 +3,25 @@ package firsProject.booksProject.Services.ServiceImpl;
 import firsProject.booksProject.Dtos.BookDto;
 import firsProject.booksProject.Entity.Author;
 import firsProject.booksProject.Entity.Book;
+import firsProject.booksProject.Entity.MyUser;
 import firsProject.booksProject.Entity.Publisher;
 import firsProject.booksProject.Exceptions.BookNotFoundException;
 import firsProject.booksProject.Mapper.BookMapper;
 import firsProject.booksProject.Repositories.AuthorRepo;
 import firsProject.booksProject.Repositories.BookRepo;
+import firsProject.booksProject.Repositories.MyUserRepo;
 import firsProject.booksProject.Repositories.PublisherRepo;
 import firsProject.booksProject.Services.BookService;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.NotAcceptableStatusException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -24,11 +29,13 @@ public class BookServiceImpl implements BookService {
     BookRepo bookRepo;
     PublisherRepo publisherRepo;
     AuthorRepo authorRepo;
+    MyUserRepo userRepo;
 
-    public BookServiceImpl(BookRepo bookRepo, PublisherRepo publisherRepo, AuthorRepo authorRepo) {
+    public BookServiceImpl(BookRepo bookRepo, PublisherRepo publisherRepo, AuthorRepo authorRepo, MyUserRepo userRepo) {
         this.bookRepo = bookRepo;
         this.publisherRepo = publisherRepo;
         this.authorRepo = authorRepo;
+        this.userRepo = userRepo;
     }
 
     @Override
@@ -60,7 +67,6 @@ public class BookServiceImpl implements BookService {
     public BookDto updateBookById(BookDto bookDto,long id) {
        Book book= bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException("The Book With Id : "+id+" Is Not Found"));
        if(book!=null) book=bookRepo.getReferenceById(id);
-       //book.setAuthors(bookDto.getAuthors());
        book.setSummary(bookDto.getSummary());
        book.setType(bookDto.getType());
        book.setTitle(bookDto.getTitle());
@@ -85,10 +91,8 @@ public class BookServiceImpl implements BookService {
             author.getBooks().remove(book);
             authorRepo.save(author);
         }
-        System.out.println("removed suc");
         authors=bookDto.getAuthors();
         book.getAuthors().clear();
-        System.out.println("cleared suc");
         for(Author author:authors)
         {
             if(authorRepo.findByName(author.getName())==null) authorRepo.save(author);
@@ -97,7 +101,6 @@ public class BookServiceImpl implements BookService {
             author.getBooks().add(book);
         }
         Book savedBook=bookRepo.save(book);
-        System.out.println(authorRepo.findAll());
         return BookMapper.mapToBookDTO(savedBook);
     }
 
@@ -141,21 +144,14 @@ public class BookServiceImpl implements BookService {
     public List<BookDto> getAllBooksByAuthors(List<String> authors) {
         Set<Book> books=new HashSet<>();
         Set <Author> authors1=new HashSet<>();
-        System.out.println("before");
         for(String name:authors) {
             Author a=authorRepo.findByName(name);
             if(a!=null)
             authors1.add(a);
         }
-
-        System.out.println("first"+authors1);
         for(Author author:authors1)
             books.addAll(bookRepo.findAllByAuthors(author));
-        //System.out.println(bookRepo.findAllByAuthors(authors1));
-        //books=bookRepo.findAllByAuthors(authors1);
-        System.out.println("hi"+books);
         return books.stream().map(BookMapper::mapToBookDTO).toList();
-
     }
 
     @Override
@@ -170,6 +166,22 @@ public class BookServiceImpl implements BookService {
         Book book=bookRepo.findBookById(id);
         if(book==null) throw new BookNotFoundException("the book with id "+id+" is not found");
         return BookMapper.mapToBookDTO(book);
+    }
+
+    @Override
+    public CommandLineRunner userup(String name, String pass) {
+        return args -> {
+            MyUser user1=new MyUser();
+            user1.setUsername(name);
+            user1.setPassword(passwordEncoder().encode(pass));
+            user1.setRoles(Set.of("USER"));
+            if(userRepo.findByUsername(name)==null)
+            userRepo.save(user1);
+            else throw new NotAcceptableStatusException("this username is token before,please try another name");
+        };
+    }
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }
