@@ -55,6 +55,7 @@ public class FrontBookController {
     public String updateForm(@PathVariable(value = "id") long id, Model model) {
         BookDto bookDto = bookService.getBookById(id);
         String author=new String();
+        if(authorstmp3.isEmpty())
         authorstmp3.addAll(bookDto.getAuthorsName());
         model.addAttribute("authorstmp", authorstmp3);
         model.addAttribute("author", author);
@@ -237,6 +238,11 @@ public class FrontBookController {
     public String signedup (@RequestParam String name,@RequestParam String pass)
     {
        bookService.userup(name,pass);
-       return "allBooks";
+       return "redirect:/front/api/books/get";
     }
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
+
 }

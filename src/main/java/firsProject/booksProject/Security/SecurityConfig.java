@@ -41,7 +41,7 @@ public class SecurityConfig {
 
                 )
                 .httpBasic(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults())
+                .formLogin(form ->form.loginPage("/login"))
                 .logout(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable);
         return http.build();
@@ -52,7 +52,6 @@ public class SecurityConfig {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
                 MyUser myUser = myUserRepo.findByUsername(username);
-                System.out.println(myUser);
                 if (myUser == null)
                 {throw new UserNotFoundException(username+"not found");}
                 UserDetails userDetails=User.builder()
@@ -64,8 +63,6 @@ public class SecurityConfig {
             }
         };
     }
-
-
     @Bean
     public CommandLineRunner load (MyUserRepo myUserRepo) {
         return args -> {
@@ -76,9 +73,6 @@ public class SecurityConfig {
             myUserRepo.save(user);
             };
     }
-
-
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
