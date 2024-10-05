@@ -62,6 +62,11 @@ public class FrontBookController {
     @PostMapping("/front/api/books/modify/{id}")
     public String modify(@PathVariable long id,@ModelAttribute("book") BookDto bookDto)
     {
+
+        if(bookDto.getDateOfPublish().compareTo(Date.from(LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC))) == 1)
+        {throw new DateNotTrueException("date is not Acceptable");}
+        if(bookDto.getNumOfPublish()<1) throw new NumOfPublishException("numOfPublish is not acceptable");
+
         for(String name:authorstmp3)
         {
             Author author=new Author();
@@ -140,6 +145,7 @@ public class FrontBookController {
 
     @PostMapping("/front/api/books/findById")
     public String findById(@ModelAttribute("id") long id){
+//        bookService.test();
         return "redirect:getBookById/"+id;
     }
     @GetMapping("/front/api/books/getBookById/{id}")

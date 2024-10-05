@@ -2,7 +2,6 @@ package firsProject.booksProject.Services;
 
 import firsProject.booksProject.Dtos.BookDto;
 import firsProject.booksProject.Entity.MyUser;
-import org.springframework.boot.CommandLineRunner;
 
 import java.util.List;
 
@@ -17,4 +16,5 @@ List<BookDto> getAllBooksByAuthors(List<String> authors);
 List<BookDto> getBookBySummary(String summary);
 BookDto getBookById(long id);
 MyUser adduser(String name,String pass);
+//void test() throws InterruptedException;
 }

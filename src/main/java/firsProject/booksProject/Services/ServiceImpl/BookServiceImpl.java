@@ -12,13 +12,11 @@ import firsProject.booksProject.Repositories.AuthorRepo;
 import firsProject.booksProject.Repositories.BookRepo;
 import firsProject.booksProject.Repositories.MyUserRepo;
 import firsProject.booksProject.Repositories.PublisherRepo;
-import firsProject.booksProject.Security.SecurityConfig;
 import firsProject.booksProject.Services.BookService;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.NotAcceptableStatusException;
+
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,6 +26,8 @@ import java.util.Set;
 @Service
 public class BookServiceImpl implements BookService {
 
+   // @PersistenceContext
+    //private EntityManager entityManager;
     BookRepo bookRepo;
     PublisherRepo publisherRepo;
     AuthorRepo authorRepo;
@@ -39,7 +39,6 @@ public class BookServiceImpl implements BookService {
         this.authorRepo = authorRepo;
         this.userRepo = userRepo;
     }
-
     @Override
     public BookDto addBook(BookDto bookDto) {
         Book book = BookMapper.mapToBook(bookDto);
