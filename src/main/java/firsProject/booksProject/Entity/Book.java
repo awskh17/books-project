@@ -5,13 +5,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 import org.springframework.format.annotation.DateTimeFormat;
+
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-//@Indexed
+@Indexed
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,22 +26,22 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-//    @FullTextField
+    @FullTextField
     private String title;
-//    @FullTextField
+    @FullTextField
     private String type;
-//    @FullTextField
+    @FullTextField
     private String summary;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateOfPublish;
-//    @GenericField
+    @GenericField
     private int numOfPublish;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "Book_Author",joinColumns = @JoinColumn(name = "Book_Id"),inverseJoinColumns = @JoinColumn(name = "Author_Id"))
-//    @IndexedEmbedded
     private Set<Author> authors=new HashSet<>();
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "publisher_Id")
     private Publisher publisher;
+
 
 }
