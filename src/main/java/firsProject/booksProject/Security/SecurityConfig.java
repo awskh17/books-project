@@ -10,6 +10,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -34,12 +35,15 @@ public class SecurityConfig {
                                 .requestMatchers("front/api/books/update/**").hasRole("ADMIN")
                                 .requestMatchers("front/api/books/save").hasRole("ADMIN")
                                 .requestMatchers("front/api/books/deleteBook/**").hasRole("ADMIN")
+                                .requestMatchers("/h2-console/**").hasRole("ADMIN")
+                                .requestMatchers("/member/**").hasRole("ADMIN")
                                 .requestMatchers("front/api/books/signup").permitAll()
                                 .requestMatchers("front/api/books/signedup").permitAll()
                                 .requestMatchers("front/api/books/**").hasRole("USER")
                                 .requestMatchers("/api/books/get/**").hasRole("USER")
 
                 )
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(form ->form.loginPage("/login"))
                 .logout(Customizer.withDefaults())
