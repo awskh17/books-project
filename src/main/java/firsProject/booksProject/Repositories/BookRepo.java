@@ -6,7 +6,6 @@ import firsProject.booksProject.Entity.Publisher;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Set;
 
 public interface BookRepo extends JpaRepository<Book, Long> {
 List<Book> findAllBySummary(String summary);

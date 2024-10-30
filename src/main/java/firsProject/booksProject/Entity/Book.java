@@ -36,6 +36,7 @@ public class Book {
     private Date dateOfPublish;
     @GenericField
     private int numOfPublish;
+    @IndexedEmbedded
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "Book_Author",joinColumns = @JoinColumn(name = "Book_Id"),inverseJoinColumns = @JoinColumn(name = "Author_Id"))
     private Set<Author> authors=new HashSet<>();

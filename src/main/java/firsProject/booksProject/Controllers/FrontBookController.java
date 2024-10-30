@@ -4,6 +4,8 @@ import firsProject.booksProject.Dtos.BookDto;
 import firsProject.booksProject.Entity.Author;
 import firsProject.booksProject.Exceptions.*;
 import firsProject.booksProject.Services.BookService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,14 +32,21 @@ public class FrontBookController {
     @GetMapping("/")
     public String index()
     {
-        return "index";
+        return "/index";
     }
+
     @GetMapping("/front/api/books/get")
     public String getBooks(Model model) {
         authorstmp.clear();
         authorstmp2.clear();
         model.addAttribute("book", bookService.getAllBooks());
-        return "/allBooks";
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")))
+        {
+            return "/allBooks";
+        }
+
+        return "/allBooksUser";
     }
     @GetMapping("/front/api/books/add")
     public String addBook(Model model) {
@@ -145,7 +154,6 @@ public class FrontBookController {
 
     @PostMapping("/front/api/books/findById")
     public String findById(@ModelAttribute("id") long id){
-//        bookService.test();
         return "redirect:getBookById/"+id;
     }
     @GetMapping("/front/api/books/getBookById/{id}")
@@ -170,13 +178,23 @@ public class FrontBookController {
     @GetMapping("/front/api/books/getBookByPublisher/{publisherName}")
     public String getBookByPublisher(@PathVariable(value = "publisherName") String publishername, Model model) {
         model.addAttribute("book", bookService.getAllBooksByPublisher(publishername));
-        return "SearchedByPublisher";
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")))
+        {
+            return "/SearchedByPublisher";
+        }
+        return "/SearchedByPublisherUser";
     }
     @PostMapping("/front/api/books/getBookByAuthors/Final")
     public String getBookByPublisher(Model model) {
         model.addAttribute("book", bookService.getAllBooksByAuthors(authorstmp2.stream().toList()));
         authorstmp2.clear();
-        return "SearchedByAuthor";
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")))
+        {
+            return "/SearchedByAuthor";
+        }
+        return "/SearchedByAuthorUser";
     }
     @PostMapping("/front/api/books/addAuthorForSearch")
     public String addAuthorSearch(@RequestParam String author){
@@ -208,7 +226,12 @@ public class FrontBookController {
     public String getBookByTitle(@PathVariable(value = "title") String title, Model model) {
         List<BookDto> books =bookService.getAllBooksByTitle(title);
         model.addAttribute("book", books);
-        return "SearchedByTitle";
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")))
+        {
+            return "/SearchedByTitle";
+        }
+        return "/SearchedByTitleUser";
     }
 
     @GetMapping("/front/api/books/searchSummary")
@@ -226,7 +249,12 @@ public class FrontBookController {
     @GetMapping("/front/api/books/getBookBySummary/{summary}")
     public String getBookBySummary(@PathVariable(value = "summary") String summary, Model model) {
         model.addAttribute("book", bookService.getBookBySummary(summary));
-        return "SearchedBySummary";
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")))
+        {
+            return "/SearchedBySummary";
+        }
+        return "SearchedBySummaryUser";
     }
     @GetMapping("/login")
     public String login(){

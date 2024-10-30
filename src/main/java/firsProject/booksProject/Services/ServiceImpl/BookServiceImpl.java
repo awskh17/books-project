@@ -13,21 +13,22 @@ import firsProject.booksProject.Repositories.BookRepo;
 import firsProject.booksProject.Repositories.MyUserRepo;
 import firsProject.booksProject.Repositories.PublisherRepo;
 import firsProject.booksProject.Services.BookService;
+import jakarta.persistence.EntityManager;
+import org.hibernate.search.engine.search.query.SearchResult;
+import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.session.SearchSession;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class BookServiceImpl implements BookService {
 
-   // @PersistenceContext
-    //private EntityManager entityManager;
+
     BookRepo bookRepo;
     PublisherRepo publisherRepo;
     AuthorRepo authorRepo;
@@ -129,7 +130,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookDto> getAllBooksByTitle(String title) {
         List<Book> book=bookRepo.findAllByTitle(title);
-//        if(book==null) {throw new BookNotFoundException("The Book With Title : "+title+" Is Not Found"); }
+//      if(book==null) {throw new BookNotFoundException("The Book With Title : "+title+" Is Not Found"); }
         return book.stream().map(BookMapper::mapToBookDTO).toList();
     }
 
