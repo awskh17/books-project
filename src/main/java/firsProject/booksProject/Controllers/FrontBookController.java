@@ -1,9 +1,9 @@
 package firsProject.booksProject.Controllers;
-
 import firsProject.booksProject.Dtos.BookDto;
 import firsProject.booksProject.Entity.Author;
 import firsProject.booksProject.Exceptions.*;
 import firsProject.booksProject.Services.BookService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -21,9 +21,9 @@ import java.util.*;
 public class FrontBookController {
 
     private BookService bookService;
-    Set<String> authorstmp =new HashSet<>();
-    Set<String> authorstmp2 =new HashSet<>();
-    Set<String> authorstmp3 =new HashSet<>();
+    public Set<String> authorstmp =new HashSet<>();
+    public Set<String> authorstmp2 =new HashSet<>();
+    public Set<String> authorstmp3 =new HashSet<>();
 
     public FrontBookController(BookService bookService) {
         this.bookService = bookService;

@@ -6,6 +6,7 @@ import firsProject.booksProject.Repositories.MyUserRepo;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -41,13 +42,14 @@ public class SecurityConfig {
                                 .requestMatchers("front/api/books/signedup").permitAll()
                                 .requestMatchers("front/api/books/**").hasRole("USER")
                                 .requestMatchers("/api/books/get/**").hasRole("USER")
-
+                                .anyRequest().permitAll()
                 )
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(form ->form.loginPage("/login"))
                 .logout(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable);
+                .csrf(AbstractHttpConfigurer::disable)
+        ;
         return http.build();
     }
     @Bean

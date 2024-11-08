@@ -13,11 +13,6 @@ import firsProject.booksProject.Repositories.BookRepo;
 import firsProject.booksProject.Repositories.MyUserRepo;
 import firsProject.booksProject.Repositories.PublisherRepo;
 import firsProject.booksProject.Services.BookService;
-import jakarta.persistence.EntityManager;
-import org.hibernate.search.engine.search.query.SearchResult;
-import org.hibernate.search.mapper.orm.Search;
-import org.hibernate.search.mapper.orm.session.SearchSession;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -40,6 +35,7 @@ public class BookServiceImpl implements BookService {
         this.authorRepo = authorRepo;
         this.userRepo = userRepo;
     }
+
     @Override
     public BookDto addBook(BookDto bookDto) {
         Book book = BookMapper.mapToBook(bookDto);
@@ -107,7 +103,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void deleteBook(long id) {
+    public BookDto deleteBook(long id) {
         Book book= bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException("The Book With Id : "+id+" Is Not Found"));
         Publisher publisher=book.getPublisher();
         Set <Author> authors=book.getAuthors();
@@ -117,7 +113,8 @@ public class BookServiceImpl implements BookService {
         {if(author.getBooks().size()==1) authorRepo.delete(author);
             else author.getBooks().remove(book);
         }
-        bookRepo.delete(book);
+        bookRepo.deleteById(book.getId());
+        return BookMapper.mapToBookDTO(book);
     }
 
     @Override
@@ -138,7 +135,8 @@ public class BookServiceImpl implements BookService {
     public List<BookDto> getAllBooksByPublisher(String publisher) {
         List<Book> books=new ArrayList<>();
         Publisher publisher1=publisherRepo.findByName(publisher);
-        books=bookRepo.findAllByPublisher(publisher1);
+        if(publisher1!=null)
+        books=bookRepo.findAllByPublisher(publisher1.getId());
         return books.stream().map(BookMapper::mapToBookDTO).toList();
     }
 
@@ -152,7 +150,7 @@ public class BookServiceImpl implements BookService {
             authors1.add(a);
         }
         for(Author author:authors1)
-            books.addAll(bookRepo.findAllByAuthors(author));
+            books.addAll(bookRepo.findAllByAuthors(author.getId()));
         return books.stream().map(BookMapper::mapToBookDTO).toList();
     }
 
