@@ -1,9 +1,11 @@
 package firsProject.booksProject.Controllers;
 import firsProject.booksProject.Dtos.BookDto;
 import firsProject.booksProject.Entity.Author;
+import firsProject.booksProject.Entity.Book;
 import firsProject.booksProject.Exceptions.*;
 import firsProject.booksProject.Services.BookService;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.jinq.jpa.JPAJinqStream;
+import org.jinq.jpa.JinqJPAStreamProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -71,7 +73,6 @@ public class FrontBookController {
     @PostMapping("/front/api/books/modify/{id}")
     public String modify(@PathVariable long id,@ModelAttribute("book") BookDto bookDto)
     {
-
         if(bookDto.getDateOfPublish().compareTo(Date.from(LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC))) == 1)
         {throw new DateNotTrueException("date is not Acceptable");}
         if(bookDto.getNumOfPublish()<1) throw new NumOfPublishException("numOfPublish is not acceptable");
@@ -101,7 +102,7 @@ public class FrontBookController {
     }
 
     @PostMapping("/front/api/books/save")
-    public String saveBook(@ModelAttribute("book") BookDto bookDto) {
+    public String saveBook(@ModelAttribute("book") BookDto bookDto) throws Exception {
         if(authorstmp.isEmpty()) {throw new AuthorNotAddedException("error there isnt any author here");}
         Set <Author> authors=new HashSet<>();
         for(String author:authorstmp){
@@ -125,6 +126,9 @@ public class FrontBookController {
     @GetMapping("/front/api/books/delAuthor/{author}")
     public String delAuth(@PathVariable(value = "author") String author)
     {
+
+
+
         if(!authorstmp.isEmpty())
             authorstmp.remove(author);
         return "redirect:/front/api/books/add";

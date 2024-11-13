@@ -5,7 +5,7 @@ import firsProject.booksProject.Entity.MyUser;
 import java.util.List;
 
 public interface BookService {
-BookDto addBook(BookDto bookDto);
+BookDto addBook(BookDto bookDto) throws Exception;
 BookDto updateBookById(BookDto bookDto,long id);
 BookDto deleteBook(long id);
 List<BookDto> getAllBooks();

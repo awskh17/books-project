@@ -25,7 +25,7 @@ public class BookController {
     }
 
     @PostMapping
-    ResponseEntity<String> addBook(@RequestBody BookDto bookDto) {
+    ResponseEntity<String> addBook(@RequestBody BookDto bookDto) throws Exception {
         BookDto savedBook=bookService.addBook(bookDto);
         return new ResponseEntity<>(savedBook.toString(), HttpStatus.CREATED);
     }

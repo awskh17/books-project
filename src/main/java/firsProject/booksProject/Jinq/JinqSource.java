@@ -3,13 +3,17 @@ package firsProject.booksProject.Jinq;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;
+import lombok.Getter;
 import org.jinq.jpa.JPAJinqStream;
 import org.jinq.jpa.JinqJPAStreamProvider;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.PersistenceContext;
+
 @Component
 public class JinqSource {
     private JinqJPAStreamProvider streams;
+
 
     @PersistenceUnit
     public void setEntityManagerFactory(
@@ -17,5 +21,4 @@ public class JinqSource {
         streams =new JinqJPAStreamProvider(emf);
     }
     public <U>JPAJinqStream<U> streamAll(EntityManager em , Class<U> entity){return streams.streamAll(em, entity);}
-
 }
