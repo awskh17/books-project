@@ -3,6 +3,7 @@ package firsProject.booksProject.Security;
 import firsProject.booksProject.Entity.MyUser;
 import firsProject.booksProject.Exceptions.UserNotFoundException;
 import firsProject.booksProject.Repositories.MyUserRepo;
+import firsProject.booksProject.Services.BookService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,8 +41,8 @@ public class SecurityConfig {
                                 .requestMatchers("/member/**").hasRole("ADMIN")
                                 .requestMatchers("front/api/books/signup").permitAll()
                                 .requestMatchers("front/api/books/signedup").permitAll()
-                                .requestMatchers("front/api/books/**").hasRole("USER")
-                                .requestMatchers("/api/books/get/**").hasRole("USER")
+                                .requestMatchers("front/api/books/**").hasAnyRole("USER","ADMIN")
+                                .requestMatchers("/api/books/get/**").hasAnyRole("USER","ADMIN")
                                 .anyRequest().permitAll()
                 )
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
@@ -63,7 +64,7 @@ public class SecurityConfig {
                 UserDetails userDetails=User.builder()
                         .username(myUser.getUsername())
                         .password(myUser.getPassword())
-                        .roles(myUser.getRoles().toArray(String[]::new))
+                        .roles(myUser.getRole())
                         .build();
                 return userDetails;
             }
@@ -72,10 +73,11 @@ public class SecurityConfig {
     @Bean
     public CommandLineRunner load (MyUserRepo myUserRepo) {
         return args -> {
+            if(myUserRepo.findByUsername("admin")!=null) return;
             MyUser user=new MyUser();
             user.setUsername("admin");
             user.setPassword(passwordEncoder().encode("admin"));
-            user.setRoles(Set.of("USER","ADMIN"));
+            user.setRole("ADMIN");
             myUserRepo.save(user);
             };
     }

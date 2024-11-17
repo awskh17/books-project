@@ -207,7 +207,7 @@ public class BookServiceImpl implements BookService {
         MyUser user=new MyUser();
         user.setUsername(name);
         user.setPassword(passwordEncoder().encode(pass));
-        user.setRoles(Set.of("USER"));
+        user.setRole("USER");
         return userRepo.save(user);
     }
     public PasswordEncoder passwordEncoder() {

@@ -26,7 +26,7 @@ import java.util.Set;
 @Table(name="book")
 public class Book implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @FullTextField
     private String title;

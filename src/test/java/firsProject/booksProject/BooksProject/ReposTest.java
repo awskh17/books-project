@@ -74,10 +74,14 @@ public class ReposTest {
         bookDto2.getAuthors().add(author);
         bookDto2.setPublisher(publisher);
 
+//        publisherRepo.saveAll(List.of(publisher,publisher1,publisher2));
+//        authorRepo.saveAll(List.of(author,author1,author2));
     }
 
     @Test
     public void addnewbook() throws Exception{
+
+
         var test = bookRepo.save(BookMapper.mapToBook(bookDto));
         Assertions.assertEquals(bookDto.getType(),test.getType(),"Book type is not like You insert it");
         Assertions.assertEquals(bookDto.getSummary(),test.getSummary(),"Book summary is not like You insert it");
