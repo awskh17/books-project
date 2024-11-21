@@ -2,10 +2,12 @@ package firsProject.booksProject.Controllers;
 import firsProject.booksProject.Dtos.BookDto;
 import firsProject.booksProject.Entity.Author;
 import firsProject.booksProject.Entity.Book;
+import firsProject.booksProject.Entity.SearchPro;
 import firsProject.booksProject.Exceptions.*;
 import firsProject.booksProject.Services.BookService;
 import org.jinq.jpa.JPAJinqStream;
 import org.jinq.jpa.JinqJPAStreamProvider;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -126,9 +128,6 @@ public class FrontBookController {
     @GetMapping("/front/api/books/delAuthor/{author}")
     public String delAuth(@PathVariable(value = "author") String author)
     {
-
-
-
         if(!authorstmp.isEmpty())
             authorstmp.remove(author);
         return "redirect:/front/api/books/add";
@@ -259,6 +258,37 @@ public class FrontBookController {
             return "/SearchedBySummary";
         }
         return "SearchedBySummaryUser";
+    }
+        @GetMapping("/front/api/books/searchBookPro")
+    public String getBookPro(Model model)
+    {
+        SearchPro sp = new SearchPro();
+        String author=new String();
+        model.addAttribute("authorstmp", authorstmp2);
+        model.addAttribute("sp",sp);
+        model.addAttribute("author",author);
+        return "SearchPro";
+    }
+    @PostMapping("/front/api/books/findPro")
+    String findPro(@ModelAttribute("sp") SearchPro sp,Model model) throws Exception{
+       // System.out.println(sp.publisher+title+type+summary+dateOfPublish1+dateOfPublish);
+        model.addAttribute("book",bookService.searchpro(sp, authorstmp2));
+        authorstmp2.clear();
+        return "SearchedPro";
+    }
+
+    @PostMapping("/front/api/books/addAuthorForSearchPro")
+    String addAuthorForSearchPro(@RequestParam String author){
+        if(author!=null)
+        authorstmp2.add(author);
+        return "redirect:/front/api/books/searchBookPro";
+    }
+    @GetMapping("/front/api/books/delAuthor/searchPro/{author}")
+    public String delAuthorPro(@PathVariable(value = "author") String author)
+    {
+        if(!authorstmp2.isEmpty())
+            authorstmp2.remove(author);
+        return "redirect:/front/api/books/searchBookPro";
     }
     @GetMapping("/login")
     public String login(){

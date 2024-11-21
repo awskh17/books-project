@@ -8,7 +8,3 @@ create table BOOK (
         type varchar(255),
         primary key (id)
     )
---    alter table if exists book
---           add constraint FKgtvt7p649s4x80y6f4842pnfq
---           foreign key (publisher_id)
---           references publisher

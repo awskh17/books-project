@@ -4,4 +4,4 @@ create table my_user (
         role varchar(255),
         username varchar(255),
         primary key (id)
-    )
+    );

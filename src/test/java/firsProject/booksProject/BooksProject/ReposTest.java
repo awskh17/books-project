@@ -8,6 +8,7 @@ import firsProject.booksProject.Mapper.BookMapper;
 import firsProject.booksProject.Repositories.AuthorRepo;
 import firsProject.booksProject.Repositories.BookRepo;
 import firsProject.booksProject.Repositories.PublisherRepo;
+import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,15 +16,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.event.annotation.BeforeTestMethod;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 @WithMockUser(username="admin",roles={"ADMIN"})
-@DataJpaTest(excludeAutoConfiguration= {BookRepo.class, PublisherRepo.class, AuthorRepo.class})
+@DataJpaTest
+
 public class ReposTest {
+
 
     @Autowired
     private BookRepo bookRepo;
@@ -31,6 +33,7 @@ public class ReposTest {
     private PublisherRepo publisherRepo;
     @Autowired
     private AuthorRepo authorRepo;
+
 
       BookDto bookDto=new BookDto();
       Author author=new Author();

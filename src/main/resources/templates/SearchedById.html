@@ -48,7 +48,13 @@
         </tr>
         </tbody>
     </table>
+    <a th:href="@{/front/api/books/searchPublisher}" class="btn btn-primary btn-sm mb-3" >Get Book By Publisher</a>
+    <a th:href="@{/front/api/books/searchAuthor}" class="btn btn-primary btn-sm mb-3" >Get Book By Authors</a>
+    <a th:href="@{/front/api/books/searchTitle}" class="btn btn-primary btn-sm mb-3" >Get Book By Title</a>
+    <a th:href="@{/front/api/books/searchSummary}" class="btn btn-primary btn-sm mb-3" >Get Book By Summary</a>
+    <br>
     <a th:href="@{/front/api/books/get}" class="btn btn-primary btn-sm mb-3"> Back to Book List</a>
-</div>
+    <br>
+    <a th:href="@{/front/api/books/searchBookPro}" class="btn btn-primary btn-sm mb-3">More filters</a></div>
 </body>
 </html>

@@ -32,6 +32,9 @@ public class SecurityConfig {
                 .authorizeRequests(
                         req -> req
                                 .requestMatchers("/api/books/**").hasRole("ADMIN")
+                                .requestMatchers("front/api/books/searchBookPro").hasRole("ADMIN")
+                                .requestMatchers("front/api/books/findPro").hasRole("ADMIN")
+                                .requestMatchers("front/api/books/addAuthorForSearchPro").hasRole("ADMIN")
                                 .requestMatchers("front/api/books/add").hasRole("ADMIN")
                                 .requestMatchers("front/api/books/addAuthor").hasRole("ADMIN")
                                 .requestMatchers("front/api/books/update/**").hasRole("ADMIN")

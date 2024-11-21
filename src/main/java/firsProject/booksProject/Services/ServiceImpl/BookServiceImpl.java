@@ -1,10 +1,7 @@
 package firsProject.booksProject.Services.ServiceImpl;
 
 import firsProject.booksProject.Dtos.BookDto;
-import firsProject.booksProject.Entity.Author;
-import firsProject.booksProject.Entity.Book;
-import firsProject.booksProject.Entity.MyUser;
-import firsProject.booksProject.Entity.Publisher;
+import firsProject.booksProject.Entity.*;
 import firsProject.booksProject.Exceptions.BookNotFoundException;
 import firsProject.booksProject.Exceptions.UserFoundException;
 import firsProject.booksProject.Jinq.JinqSource;
@@ -23,7 +20,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -210,8 +210,48 @@ public class BookServiceImpl implements BookService {
         user.setRole("USER");
         return userRepo.save(user);
     }
+
+    @Override
+    public List<BookDto> searchpro(SearchPro sp, Set<String> as) {
+        Set<Author> authors = new HashSet<>();
+        // Populate authors set
+        for (String a : as) {
+            List<Author> author = jinqSource.streamAll(em, Author.class)
+                    .where(au -> au.getName().equals(a))
+                    .toList();
+            if (!author.isEmpty()) {
+                authors.add(author.get(0)); // Add the first author to the set
+            }
+        }
+
+        String title = sp.getTitle();
+        String type = sp.getType();
+        String summary = sp.getSummary();
+        String publisher = sp.getPublisher();
+        Date d = sp.getDateOfPublish();
+        Date d1 = sp.getDateOfPublish1();
+        // Query books with simplified conditions
+        Set<Book> books= new HashSet<>(jinqSource.streamAll(em, Book.class)
+                .where(b -> title == "" || b.getTitle().equals(title)) // Title check
+                .where(b -> type == "" || b.getType().equals(type)) // Type check
+                .where(b -> summary == "" || b.getSummary().equals(summary)) // Summary check
+                .where(b -> d == null || b.getDateOfPublish().after(d)) // Filter by publish date
+                .where(b -> d1 == null || b.getDateOfPublish().before(d1)) // Filter by publish date
+                .where(b -> publisher == "" || b.getPublisher().getName().equals(publisher)) // Publisher check
+                .toList());
+        Set<Book> books1= new HashSet<>();
+        if(!as.isEmpty())
+        for(Author author:authors)
+        {books1.addAll(jinqSource.streamAll(em,Book.class).where(b->b.getAuthors().contains(author)).toList()); books.retainAll(books1); }
+
+
+        return books.stream().map(BookMapper::mapToBookDTO).toList();
+    }
+
+
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 
 }
